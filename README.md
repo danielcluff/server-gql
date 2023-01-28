@@ -1,2 +1,2 @@
-# server-gql
-Boilerplate for graphql backend
+# Server - GraphQL
+Boilerplate for typescript graphql backend
