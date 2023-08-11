@@ -16,6 +16,7 @@ export class UserData extends DateEntity {
   id: number;
 
   @Field()
+  @Column()
   @Generated("uuid")
   uuid: string;
 

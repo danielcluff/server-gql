@@ -85,7 +85,6 @@ async function main() {
         query,
         variables,
       });
-      console.log(result);
 
       sendResult(result, res.raw);
     },

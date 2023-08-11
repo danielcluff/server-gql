@@ -41,6 +41,8 @@ export class UserResolver {
       password: hashedPassword,
     }).save();
 
+    console.log(req);
+
     req.session.userId = user.uuid;
 
     return { user };
