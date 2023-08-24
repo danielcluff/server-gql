@@ -17,8 +17,6 @@
     "@fastify/cors": "^8.3.0",
     "@fastify/redis": "^6.1.1",
     "@fastify/session": "^10.4.0",
-    "@mgcrea/fastify-session": "^2.1.1",
-    "@mgcrea/fastify-session-redis-store": "^1.0.0",
     "argon2": "^0.30.3",
     "class-validator": "^0.14.0",
     "connect-redis": "^7.1.0",

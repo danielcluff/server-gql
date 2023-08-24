@@ -3,11 +3,11 @@ import { User } from "../entities/User";
 import {
   Arg,
   Ctx,
-  FieldResolver,
+  // FieldResolver,
   Mutation,
   Query,
   Resolver,
-  Root,
+  // Root,
   UseMiddleware,
 } from "type-graphql";
 import { UserAccountInput } from "./inputs/UserAccountInput";
@@ -26,8 +26,8 @@ import { isAuth } from "../middleware/isAuth";
 export class UserResolver {
   @Mutation(() => UserResponse)
   async createUser(
-    @Arg("input") input: UserAccountInput,
-    @Ctx() { req }: MyContext
+    @Arg("input") input: UserAccountInput
+    // @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const errors = validateRegister(input);
     if (errors) {
@@ -41,9 +41,7 @@ export class UserResolver {
       password: hashedPassword,
     }).save();
 
-    console.log(req);
-
-    req.session.userId = user.uuid;
+    // req.session.userId = user.uuid;
 
     return { user };
   }
@@ -52,7 +50,7 @@ export class UserResolver {
   async changePassword(
     @Arg("token") token: string,
     @Arg("newPassword") newPassword: string,
-    @Ctx() { redis, req }: MyContext
+    @Ctx() { redis }: MyContext
   ): Promise<UserResponse> {
     const errors = validatePassword(newPassword);
     if (errors) {
@@ -79,7 +77,7 @@ export class UserResolver {
 
     await redis.del(key);
 
-    req.session.userId = user.uuid;
+    // req.session.userId = user.uuid;
 
     return { user };
   }
@@ -115,8 +113,8 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("usernameOrEmail") usernameOrEmail: string,
-    @Arg("password") password: string,
-    @Ctx() { req }: MyContext
+    @Arg("password") password: string
+    // @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const user = await User.findOne(
       usernameOrEmail.includes("@")
@@ -131,7 +129,7 @@ export class UserResolver {
       return createError("password", "Incorrect password.");
     }
 
-    req.session.userId = user.uuid;
+    // req.session.userId = user.uuid;
 
     return { user };
   }
@@ -158,21 +156,21 @@ export class UserResolver {
     return true;
   }
 
-  @Query(() => User, { nullable: true })
-  currentUser(@Ctx() { req }: MyContext) {
-    if (!req.session.userId) {
-      return null;
-    }
+  // @Query(() => User, { nullable: true })
+  // currentUser(@Ctx() { req }: MyContext) {
+  //   if (!req.session.userId) {
+  //     return null;
+  //   }
 
-    return User.findOneBy({ uuid: req.session.userId });
-  }
+  //   return User.findOneBy({ uuid: req.session.userId });
+  // }
 
-  @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() { req }: MyContext) {
-    if (req.session.userId === user.uuid) {
-      return user.email;
-    }
+  // @FieldResolver(() => String)
+  // email(@Root() user: User, @Ctx() { req }: MyContext) {
+  //   if (req.session.userId === user.uuid) {
+  //     return user.email;
+  //   }
 
-    return "";
-  }
+  //   return "";
+  // }
 }
