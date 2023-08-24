@@ -13,7 +13,7 @@ import { UserResolver } from "./resolvers/user";
 import { __PROD__, COOKIE_NAME } from "./configuration/constants";
 import express from "express";
 import session from "express-session";
-import connectRedis from "connect-redis";
+import RedisStore from "connect-redis";
 import Redis from "ioredis";
 import cors from "cors";
 import { AppDataSource } from "./dataSource";
@@ -24,10 +24,10 @@ async function main() {
   await AppDataSource.runMigrations();
 
   const server = express();
-  const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
 
-  server.set("proxy", 1);
+  // server.set("proxy", 1);
+  server.use(express.json());
   server.use(
     cors({
       origin: process.env.CORS_ORIGIN,
@@ -46,7 +46,7 @@ async function main() {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __PROD__, // cookie only works in https
-        domain: __PROD__ ? ".codeponder.com" : undefined,
+        domain: __PROD__ ? ".domain.com" : undefined,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,

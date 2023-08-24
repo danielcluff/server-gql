@@ -131,6 +131,7 @@ export class UserResolver {
       return createError("password", "Incorrect password.");
     }
 
+    console.log("req", req);
     req.session.userId = user.uuid;
 
     return { user };
@@ -138,13 +139,22 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   async logout(@Ctx() { req, res }: MyContext) {
-    await req.session.destroy();
-    await res.clearCookie(COOKIE_NAME);
-    return;
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log("user err: ", err);
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      })
+    );
   }
 
   @Query(() => User, { nullable: true })
-  async search(@Arg("params") username: string): Promise<User | null> {
+  async search(@Arg("username") username: string): Promise<User | null> {
     const firstUser = await User.findOneBy({ username: username });
     return firstUser;
   }
