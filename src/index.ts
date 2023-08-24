@@ -14,9 +14,11 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/user";
 import { __PROD__, COOKIE_NAME, SESSION_TTL } from "./configuration/constants";
 import fastifyCookie from "@fastify/cookie";
-import fastifySession from "@mgcrea/fastify-session";
-import { RedisStore } from "@mgcrea/fastify-session-redis-store";
-import Redis from "ioredis";
+import fastifySession from "@fastify/session";
+import fastifyRedis from "@fastify/redis";
+// import fastifySession from "@mgcrea/fastify-session";
+// import { RedisStore } from "@mgcrea/fastify-session-redis-store";
+// import Redis from "ioredis";
 import cors from "@fastify/cors";
 import { AppDataSource } from "./dataSource";
 import { UserDataResolver } from "./resolvers/userData";
@@ -25,18 +27,17 @@ async function main() {
   await AppDataSource.initialize();
   await AppDataSource.runMigrations();
 
-  const server = fastify();
+  const server = fastify({ logger: true });
   server.register(cors, {
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   });
   server.register(fastifyCookie);
+  server.register(fastifyRedis, { url: process.env.REDIS_URL });
   server.register(fastifySession, {
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
     cookieName: COOKIE_NAME,
-    store: new RedisStore({
-      client: new Redis(process.env.REDIS_URL),
-      ttl: SESSION_TTL,
-    }),
     cookie: {
       maxAge: SESSION_TTL,
       httpOnly: true,
@@ -44,8 +45,6 @@ async function main() {
       secure: __PROD__, // cookie only works in https
       domain: __PROD__ ? ".example.com" : undefined,
     },
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
   });
 
   const schema = await buildSchema({
@@ -56,7 +55,7 @@ async function main() {
   server.route({
     method: ["POST", "GET"],
     url: "/graphql",
-    handler: async (req, res) => {
+    async handler(req, res) {
       const request: Request = {
         headers: req.headers,
         method: req.method,
@@ -84,6 +83,9 @@ async function main() {
         operationName,
         query,
         variables,
+        contextFactory: () => ({
+          session: req.session,
+        }),
       });
 
       sendResult(result, res.raw);
