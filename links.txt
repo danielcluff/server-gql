@@ -1,0 +1,18 @@
+Link dump
+putting this on hold for now while I focus on other things
+
+https://www.howtographql.com/typescript-helix/8-authentication/
+https://typegraphql.com/docs/resolvers.html
+https://typeorm.io/entities
+DI https://www.youtube.com/watch?v=5YYsfkl2UCM&list=PLN3n1USn4xlma1bBu3Tloe4NyYn9Ko8Gs&index=15
+https://github.com/MichalLytek/type-graphql/tree/master/examples
+https://github.com/typeorm/typeorm/tree/ff6e8751d98dfe9999ee21906cca7d20b1c6b15d/sample/sample7-pagination
+https://alexolivier.me/posts/end-to-end-typesafety-with-typegraphql-typeorm-apollo-react
+https://github.com/benawad/type-graphql-series
+https://github.com/typeorm/typescript-example/tree/master
+
+
+JWT going forward
+https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#token-based-mitigation
+https://authjs.dev/
+https://www.youtube.com/watch?v=67mezK3NzpU

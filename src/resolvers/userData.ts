@@ -1,30 +1,17 @@
 import { UserData } from "../entities/UserData";
-import {
-  Arg,
-  Ctx,
-  Int,
-  Mutation,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import { UserDataInput } from "./inputs/UserDataInput";
-import { MyContext } from "../types/context";
-import { isAuth } from "../middleware/isAuth";
+// import { isAuth } from "../middleware/isAuth";
 import { PaginatedUserData } from "./types/Pagination";
 import { AppDataSource } from "../dataSource";
 
 @Resolver(UserData)
 export class UserDataResolver {
   @Mutation(() => UserData)
-  async create(
-    @Arg("data") data: UserDataInput,
-    @Ctx() { req }: MyContext
-  ): Promise<UserData> {
+  async create(@Arg("data") data: UserDataInput): Promise<UserData> {
     const userData = await UserData.create({
       data1: data.data1,
       data2: data.data2,
-      userId: req.session.userId,
     }).save();
 
     return userData;
@@ -48,7 +35,7 @@ export class UserDataResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseMiddleware(isAuth)
+  // @UseMiddleware(isAuth)
   async delete(@Arg("uuid") uuid: string): Promise<Boolean> {
     const userData = await UserData.findOneBy({ uuid: uuid });
     if (!userData) return false;
