@@ -19,3 +19,4 @@ https://www.youtube.com/watch?v=67mezK3NzpU
 
 https://www.youtube.com/watch?v=lm7fn72eA8c
 https://www.youtube.com/watch?v=oYFATqEdN3Y
+fastify jwt https://www.youtube.com/watch?v=LMoMHP44-xM
